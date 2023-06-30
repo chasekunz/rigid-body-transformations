@@ -30,12 +30,18 @@ def plot_point(ax, p, frame=None, text_color='black', text_offset=0.1):
     >>> plot_point(ax, p, frame='A', text_color='red', text_offset=0.2)
     """
 
-    # plot the point
+    # Plot the point.
     ax.scatter(p[0], p[1], color="black")
 
+    # Plot the frame label, if necessary.
     if frame is not None:
+        # Use the specified color, or black by default.
         if text_color is not None:
             color = text_color
+        else:
+            color = 'black'
+
+        # Add the text label.
         ax.annotate(
             text=r"$" + frame + r"$",
             xy=(p[0], p[1]),
@@ -47,6 +53,7 @@ def plot_point(ax, p, frame=None, text_color='black', text_offset=0.1):
 
 class Transform2D:
     def __init__(self, x, y, theta):
+        # x and y are the translation, theta is the rotation
         self.x = x
         self.y = y
         self.theta = theta
@@ -76,8 +83,9 @@ class Transform2D:
         Transform2D
             The composed transformation.
         """
-        # Define the behavior of the @ operator
+        # Compute the matrix product
         result = self.as_matrix() @ other
+
         return result
 
     def as_matrix(self):
@@ -159,18 +167,20 @@ class Transform2D:
         >>> t.plot(ax, frame='A', axis_label=True, axis_subscript=True, text_color='red', labels=('X', 'Y'), length=1, d1=0.1, d2=1.2)
         """
         # create unit vectors in homogenous coordinates
-        o = self @ np.array([0, 0, 1])             # origin
+        origin = self @ np.array([0, 0, 1])
         x = self @ np.array([length, 0, 1])
         y = self @ np.array([0, length, 1])
 
         # plot the axis
-        ax.plot([o[0], x[0]], [o[1], x[1]], color="red")
-        ax.plot([o[0], y[0]], [o[1], y[1]], color="lime")
+        ax.plot([origin[0], x[0]], [origin[1], x[1]], color="red")
+        ax.plot([origin[0], y[0]], [origin[1], y[1]], color="lime")
 
         if frame is not None:
             if text_color is not None:
                 color = text_color
+            # Get the origin of the frame
             o1 = self @ np.array([-d1, -d1, 1])
+            # Annotate the origin of the frame
             ax.annotate(
                 text=r"$\{" + frame + r"\}$",
                 xy=(o1[0], o1[1]),
@@ -182,8 +192,8 @@ class Transform2D:
             if text_color is not None:
                 color = text_color
             # add the labels to each axis
-            x = (x - o) * d2 + o
-            y = (y - o) * d2 + o
+            x = (x - origin) * d2 + origin
+            y = (y - origin) * d2 + origin
 
             if frame is None or not axis_subscript:
                 format = "${:s}$"
