@@ -41,11 +41,11 @@ def plot_point(ax, p, frame=None, text_color='black', text_offset=0.1):
         else:
             color = 'black'
 
-        # Add the text label.
-        ax.annotate(
-            text=r"$" + frame + r"$",
-            xy=(p[0], p[1]),
-            xytext=(p[0] + text_offset, p[1] + text_offset),
+        # Annotate the point
+        ax.text(
+            x=p[0] + text_offset,
+            y=p[1] + text_offset,
+            s=r"$" + frame + r"$",
             verticalalignment="top",
             horizontalalignment="left",
             color=color,
@@ -181,11 +181,13 @@ class Transform2D:
             # Get the origin of the frame
             o1 = self @ np.array([-d1, -d1, 1])
             # Annotate the origin of the frame
-            ax.annotate(
-                text=r"$\{" + frame + r"\}$",
-                xy=(o1[0], o1[1]),
+            ax.text(
+                x = o1[0],
+                y = o1[1],
+                s=r"$\{" + frame + r"\}$",
                 verticalalignment="top",
                 horizontalalignment="left",
+                color=color
             )
 
         if axis_label:
@@ -200,20 +202,15 @@ class Transform2D:
             else:
                 format = "${:s}_{{{:s}}}$"
 
-            ax.annotate(
-                text=format.format(labels[0], frame),
-                xy=(x[0], x[1]),
-                color=color,
-                horizontalalignment="center",
-                verticalalignment="center",
-            )
-            ax.annotate(
-                text=format.format(labels[1], frame),
-                xy=(y[0], y[1]),
-                color=color,
-                horizontalalignment="center",
-                verticalalignment="center",
-            )
+            for axis, label in zip([x, y], labels):
+                ax.text(
+                    x = axis[0],
+                    y = axis[1],
+                    s=format.format(label, frame),
+                    verticalalignment="top",
+                    horizontalalignment="left",
+                    color=color
+                )
 
 def main():
     # Simple example of using the Transform2D class
