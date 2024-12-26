@@ -1,0 +1,17 @@
+{
+    "name": "Rigid Body Transformations",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-python.python",  // For Python development
+        "ms-toolsai.jupyter" // For Jupyter Notebook support
+    ],
+    "forwardPorts": [],
+    "postCreateCommand": "pip install -r requirements.txt",
+    "remoteUser": "vscode"
+}
